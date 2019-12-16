@@ -10,10 +10,10 @@ import (
 
 type cpu [4]float32
 
-const format = `CPU 1: %.2f, CPU2: %.2f, CPU3: %.2f, CPU4: %.2f \n`
+const format = `CPU 1: %.2f CPU2: %.2f CPU3: %.2f CPU4: %.2f`
 
-func sampleCPUdata() string {
-	// take sample CPU activity
+func sampleCPU() string {
+	// sample CPU activity
 	p := readCPUdata()
 
 	time.Sleep(time.Second * 1)
@@ -27,21 +27,11 @@ func sampleCPUdata() string {
 func readCPUdata() *linuxproc.Stat {
 	// read data from /proc/stat
 	d, err := linuxproc.ReadStat("/proc/stat")
-
 	if err != nil {
 		log.Fatal("couldn't read from /proc/stat")
 	}
 
 	return d
-}
-
-func calcAllCores(curr, prev *linuxproc.Stat) cpu {
-	// calculate CPU activity for all cores
-	stats := cpu{}
-	for i := range stats {
-		stats[i] = calcCore(curr.CPUStats[i], prev.CPUStats[i]) * 100
-	}
-	return stats
 }
 
 func calcCore(c, p linuxproc.CPUStat) float32 {
@@ -59,4 +49,13 @@ func calcCore(c, p linuxproc.CPUStat) float32 {
 	difIdle := cIdle - pIdle
 
 	return (float32(difTotal) - float32(difIdle)) / float32(difTotal)
+}
+
+func calcAllCores(curr, prev *linuxproc.Stat) cpu {
+	// calculate CPU activity for all cores
+	stats := cpu{}
+	for i := range stats {
+		stats[i] = calcCore(curr.CPUStats[i], prev.CPUStats[i]) * 100
+	}
+	return stats
 }
