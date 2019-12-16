@@ -16,7 +16,8 @@ func sampleTemp() string {
 
 	f, err := strconv.ParseFloat(d, 64)
 	if err != nil {
-		log.Fatal("couldn't parse from lm-sensors")
+		d = "0"
+		log.Print("couldn't parse from lm-sensors")
 	}
 
 	return fmt.Sprintf(tempFormat, f)
