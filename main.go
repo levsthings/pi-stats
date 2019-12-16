@@ -1,8 +1,6 @@
 package main
 
-import (
-	"fmt"
-)
+import "fmt"
 
 func main() {
 
@@ -12,6 +10,10 @@ func main() {
 	mem := sampleMemory()
 	fmt.Println(mem)
 
+	temp := sampleTemp()
+	fmt.Println(temp)
+
 	uptime := getUptime()
 	fmt.Println(uptime)
+
 }
