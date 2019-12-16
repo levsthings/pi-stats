@@ -7,7 +7,7 @@ import (
 	linuxproc "github.com/c9s/goprocinfo/linux"
 )
 
-const memFormat = `memtotal: %d memused: %d memavailable: %d`
+const memFormat = `memtotal: %dKB memused: %dKB memavailable: %dKB`
 
 func sampleMemory() string {
 	// sample CPU activity

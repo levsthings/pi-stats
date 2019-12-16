@@ -10,7 +10,7 @@ import (
 
 type cpu [4]float32
 
-const cpuFormat = `CPU 1: %.2f CPU2: %.2f CPU3: %.2f CPU4: %.2f`
+const cpuFormat = `CPU 1: %.2f%% CPU2: %.2f%% CPU3: %.2f%% CPU4: %.2f%%`
 
 func sampleCPU() string {
 	// sample CPU activity
