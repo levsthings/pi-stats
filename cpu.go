@@ -39,11 +39,11 @@ func calcCore(c, p linuxproc.CPUStat) float32 {
 	pIdle := p.Idle + p.IOWait
 	cIdle := c.Idle + c.IOWait
 
-	pNidle := p.User + p.Nice + p.System + p.IRQ + p.SoftIRQ + p.Steal
-	cNidle := c.User + c.Nice + c.System + c.IRQ + c.SoftIRQ + c.Steal
+	pNonIdle := p.User + p.Nice + p.System + p.IRQ + p.SoftIRQ + p.Steal
+	cNonIdle := c.User + c.Nice + c.System + c.IRQ + c.SoftIRQ + c.Steal
 
-	pTotal := pIdle + pNidle
-	cTotal := cIdle + cNidle
+	pTotal := pIdle + pNonIdle
+	cTotal := cIdle + cNonIdle
 
 	difTotal := cTotal - pTotal
 	difIdle := cIdle - pIdle
