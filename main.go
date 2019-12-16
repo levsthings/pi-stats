@@ -1,9 +1,17 @@
 package main
 
-import "fmt"
+import (
+	"fmt"
+)
 
 func main() {
 
-	cpu := sampleCPUdata()
+	cpu := sampleCPU()
 	fmt.Println(cpu)
+
+	mem := sampleMemory()
+	fmt.Println(mem)
+
+	uptime := getUptime()
+	fmt.Println(uptime)
 }
