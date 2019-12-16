@@ -1,19 +1,12 @@
 package main
 
-import "fmt"
+import "time"
 
 func main() {
-
-	cpu := sampleCPU()
-	fmt.Println(cpu)
-
-	mem := sampleMemory()
-	fmt.Println(mem)
-
-	temp := sampleTemp()
-	fmt.Println(temp)
-
-	uptime := getUptime()
-	fmt.Println(uptime)
-
+	// TODO: Clean up if it has more than 6 entries
+	// TODO: Run as background process on system startup
+	for {
+		time.Sleep(time.Minute * 5)
+		logger()
+	}
 }
