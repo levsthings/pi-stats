@@ -10,7 +10,7 @@ import (
 
 type cpu [4]float32
 
-const format = `CPU 1: %.2f CPU2: %.2f CPU3: %.2f CPU4: %.2f`
+const cpuFormat = `CPU 1: %.2f CPU2: %.2f CPU3: %.2f CPU4: %.2f`
 
 func sampleCPU() string {
 	// sample CPU activity
@@ -21,7 +21,7 @@ func sampleCPU() string {
 
 	stats := calcAllCores(c, p)
 
-	return fmt.Sprintf(format, stats[0], stats[1], stats[2], stats[3])
+	return fmt.Sprintf(cpuFormat, stats[0], stats[1], stats[2], stats[3])
 }
 
 func readCPUdata() *linuxproc.Stat {
