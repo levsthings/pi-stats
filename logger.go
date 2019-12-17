@@ -28,7 +28,7 @@ func format() string {
 		uptimeFormat = `uptime: %s`
 		cpuFormat    = `CPU 1: %.2f%% CPU2: %.2f%% CPU3: %.2f%% CPU4: %.2f%%`
 		tempFormat   = `temp: %s°C`
-		memFormat    = `memtotal: %dKB memused: %dKB memavailable: %dKB`
+		memFormat    = `memtotal: %dMB memused: %dMB memavailable: %dMB`
 		timeFormat   = `%d:%d:%d`
 		logFormat    = "%s, %s, %s, %s, %s\n"
 	)
@@ -40,8 +40,9 @@ func format() string {
 
 	temp := fmt.Sprintf(tempFormat, sampleTemp())
 
-	memT, memA := sampleMemory()
-	mem := fmt.Sprintf(memFormat, memT, memT-memA, memA)
+	tkb, akb := sampleMemory()
+	tmb, amb := tkb/1024, akb/1024
+	mem := fmt.Sprintf(memFormat, tmb, tmb-amb, amb)
 
 	h, m, s := time.Now().Clock()
 	t := fmt.Sprintf(timeFormat, h, m, s)
