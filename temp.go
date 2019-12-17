@@ -15,7 +15,7 @@ func sampleTemp() string {
 
 	f, err := strconv.ParseFloat(d, 64)
 	if err != nil {
-		log.Print("couldn't parse from vgencmd")
+		log.Print("couldn't parse from vcgencmd")
 	}
 
 	return fmt.Sprintf(tempFormat, f)
@@ -29,9 +29,9 @@ func parseTemp() string {
 }
 
 func readTempData() string {
-	out, err := exec.Command("vgencmd", "measure_temp").Output()
+	out, err := exec.Command("vcgencmd", "measure_temp").Output()
 	if err != nil {
-		log.Fatal("couldn't read from vgencmd")
+		log.Fatal("couldn't read from vcgencmd")
 	}
 
 	s := string(out)
