@@ -4,20 +4,18 @@ import (
 	"fmt"
 	"log"
 	"os/exec"
+	"regexp"
 	"strconv"
-	"strings"
 )
 
 const tempFormat = `temp: %.0f°C`
 
 func sampleTemp() string {
-
 	d := parseTemp()
 
 	f, err := strconv.ParseFloat(d, 64)
 	if err != nil {
-		d = "0"
-		log.Print("couldn't parse from lm-sensors")
+		log.Print("couldn't parse from vgencmd")
 	}
 
 	return fmt.Sprintf(tempFormat, f)
@@ -25,23 +23,15 @@ func sampleTemp() string {
 
 func parseTemp() string {
 	d := readTempData()
-	var temp string
+	r := regexp.MustCompile("[^0-9.]+")
 
-	lines := strings.Split(d, "\n")
-	for _, line := range lines {
-		if strings.Contains(line, "temp1_input") {
-			parts := strings.Split(line, ":")
-			temp = strings.TrimSpace(parts[1])
-		}
-	}
-
-	return temp
+	return string(r.ReplaceAllString(d, ""))
 }
 
 func readTempData() string {
-	out, err := exec.Command("sensors", "-u").Output()
+	out, err := exec.Command("vgencmd", "measure_temp").Output()
 	if err != nil {
-		log.Fatal("couldn't read from lm-sensors")
+		log.Fatal("couldn't read from vgencmd")
 	}
 
 	s := string(out)
