@@ -17,13 +17,38 @@ const (
 )
 
 func logger() {
-	h, m, s := time.Now().Clock()
-	t := fmt.Sprintf("%d:%d:%d", h, m, s)
+	f := format()
+	write(f)
 
-	log := fmt.Sprintf("%s, %s, %s, %s, %s\n", t, getUptime(), sampleCPU(), sampleTemp(), sampleMemory())
-
-	write(log)
 	rotate()
+}
+
+func format() string {
+	var (
+		uptimeFormat = `uptime: %s`
+		cpuFormat    = `CPU 1: %.2f%% CPU2: %.2f%% CPU3: %.2f%% CPU4: %.2f%%`
+		tempFormat   = `temp: %s°C`
+		memFormat    = `memtotal: %dKB memused: %dKB memavailable: %dKB`
+		timeFormat   = `%d:%d:%d`
+		logFormat    = "%s, %s, %s, %s, %s\n"
+	)
+
+	uptime := fmt.Sprintf(uptimeFormat, getUptime())
+
+	cpuData := sampleCPU()
+	cpu := fmt.Sprintf(cpuFormat, cpuData[0], cpuData[1], cpuData[2], cpuData[3])
+
+	temp := fmt.Sprintf(tempFormat, sampleTemp())
+
+	memT, memA := sampleMemory()
+	mem := fmt.Sprintf(memFormat, memT, memT-memA, memA)
+
+	h, m, s := time.Now().Clock()
+	t := fmt.Sprintf(timeFormat, h, m, s)
+
+	log := fmt.Sprintf(logFormat, t, uptime, cpu, temp, mem)
+
+	return log
 }
 
 func write(d string) {
