@@ -11,9 +11,7 @@ type cpu [4]float32
 
 func sampleCPU() cpu {
 	p := readCPUdata()
-
 	time.Sleep(time.Second * 1)
-
 	c := readCPUdata()
 
 	return calcAllCores(c, p)
@@ -46,7 +44,6 @@ func calcCore(c, p linuxproc.CPUStat) float32 {
 }
 
 func calcAllCores(curr, prev *linuxproc.Stat) cpu {
-	// calculate CPU activity for all cores
 	stats := cpu{}
 	for i := range stats {
 		stats[i] = calcCore(curr.CPUStats[i], prev.CPUStats[i]) * 100

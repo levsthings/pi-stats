@@ -18,7 +18,6 @@ const (
 
 func logger() {
 	f := format()
-
 	write(f)
 
 	rotate()
