@@ -13,7 +13,6 @@ type cpu [4]float32
 const cpuFormat = `CPU 1: %.2f%% CPU2: %.2f%% CPU3: %.2f%% CPU4: %.2f%%`
 
 func sampleCPU() string {
-	// sample CPU activity
 	p := readCPUdata()
 
 	time.Sleep(time.Second * 1)
@@ -25,7 +24,6 @@ func sampleCPU() string {
 }
 
 func readCPUdata() *linuxproc.Stat {
-	// read data from /proc/stat
 	d, err := linuxproc.ReadStat("/proc/stat")
 	if err != nil {
 		log.Fatal("couldn't read from /proc/stat")

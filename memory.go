@@ -10,7 +10,6 @@ import (
 const memFormat = `memtotal: %dKB memused: %dKB memavailable: %dKB`
 
 func sampleMemory() string {
-	// sample CPU activity
 	t, a := calcMem(readMemData())
 
 	return fmt.Sprintf(memFormat, t, t-a, a)
@@ -24,7 +23,6 @@ func calcMem(d *linuxproc.MemInfo) (t, a uint64) {
 }
 
 func readMemData() *linuxproc.MemInfo {
-	// read data from /proc/mem
 	d, err := linuxproc.ReadMemInfo("/proc/meminfo")
 	if err != nil {
 		log.Fatal("couldn't read from /proc/meminfo")
