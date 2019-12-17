@@ -6,8 +6,6 @@ import (
 	linuxproc "github.com/c9s/goprocinfo/linux"
 )
 
-const memFormat = `memtotal: %dKB memused: %dKB memavailable: %dKB`
-
 func sampleMemory() (uint64, uint64) {
 	t, a := calcMem(readMemData())
 
@@ -25,7 +23,6 @@ func readMemData() *linuxproc.MemInfo {
 	d, err := linuxproc.ReadMemInfo("/proc/meminfo")
 	if err != nil {
 		log.Fatal("couldn't read from /proc/meminfo")
-
 	}
 
 	return d
