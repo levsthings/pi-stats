@@ -8,5 +8,4 @@ func main() {
 		logger()
 		time.Sleep(time.Minute * 5)
 	}
-
 }

@@ -2,8 +2,10 @@ package main
 
 import (
 	"fmt"
+	"io/ioutil"
 	"log"
 	"os"
+	"sort"
 	"time"
 )
 
@@ -11,6 +13,7 @@ const (
 	dir     = "out"
 	logPath = dir + "/"
 	perms   = 0770
+	maxLogs = 7
 )
 
 func logger() {
@@ -20,7 +23,7 @@ func logger() {
 	log := fmt.Sprintf("%s, %s, %s, %s, %s\n", t, getUptime(), sampleCPU(), sampleTemp(), sampleMemory())
 
 	write(log)
-
+	rotate()
 }
 
 func write(d string) {
@@ -43,4 +46,25 @@ func write(d string) {
 	if err := f.Close(); err != nil {
 		log.Fatal(err)
 	}
+}
+
+func rotate() {
+	logs, err := ioutil.ReadDir(dir)
+	if err != nil {
+		log.Fatal("couldn't rotate logs", err)
+	}
+
+	if len(logs) > maxLogs {
+		sort.Slice(logs, func(i, j int) bool {
+			t1, _ := time.Parse("02-01-2006", logs[i].Name())
+			t2, _ := time.Parse("02-01-2006", logs[j].Name())
+			return t1.Before(t2)
+		})
+
+		err := os.Remove(logPath + logs[0].Name())
+		if err != nil {
+			log.Println("error deleting oldest log", err)
+		}
+	}
+
 }
