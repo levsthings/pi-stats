@@ -18,6 +18,7 @@ const (
 
 func logger() {
 	f := format()
+
 	write(f)
 
 	rotate()
@@ -26,9 +27,9 @@ func logger() {
 func format() string {
 	var (
 		uptimeFormat = `uptime: %s`
-		cpuFormat    = `CPU 1: %.2f%% CPU2: %.2f%% CPU3: %.2f%% CPU4: %.2f%%`
+		cpuFormat    = `CPU 1: %.2f%%, CPU2: %.2f%%, CPU3: %.2f%%, CPU4: %.2f%%`
 		tempFormat   = `temp: %s°C`
-		memFormat    = `memtotal: %dMB memused: %dMB memavailable: %dMB`
+		memFormat    = `memtotal: %dMB, memused: %dMB, memavailable: %dMB`
 		timeFormat   = `%d:%d:%d`
 		logFormat    = "%s, %s, %s, %s, %s\n"
 	)
