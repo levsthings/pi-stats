@@ -10,7 +10,7 @@ import (
 )
 
 const (
-	dir     = "out"
+	dir     = ".pi-stat"
 	logPath = dir + "/"
 	perms   = 0770
 	maxLogs = 7
