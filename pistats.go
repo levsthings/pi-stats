@@ -2,10 +2,10 @@ package pistats
 
 // Data describes the structure that GetData returns
 type Data struct {
-	Uptime      string
-	CPU         cpu
+	Uptime string
+	CPU
 	Temperature string
-	Memory      memory
+	Memory
 }
 
 // GetData calls all data points and returns Data

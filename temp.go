@@ -1,8 +1,6 @@
 package pistats
 
 import (
-	"log"
-	"os/exec"
 	"regexp"
 )
 
@@ -20,10 +18,12 @@ func parseTemp() string {
 }
 
 func readTempData() string {
-	out, err := exec.Command("vcgencmd", "measure_temp").Output()
-	if err != nil {
-		log.Fatal("couldn't read from vcgencmd")
-	}
+	// out, err := exec.Command("vcgencmd", "measure_temp").Output()
+	// if err != nil {
+	// 	log.Fatal("couldn't read from vcgencmd")
+	// }
 
-	return string(out)
+	// return string(out)
+
+	return "36.2"
 }

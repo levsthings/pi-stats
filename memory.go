@@ -6,18 +6,19 @@ import (
 	linuxproc "github.com/c9s/goprocinfo/linux"
 )
 
-type memory struct {
-	total     uint64
-	available uint64
+// Memory contains total and available memory values in KBs
+type Memory struct {
+	Total     uint64
+	Available uint64
 }
 
-func sampleMemory() memory {
+func sampleMemory() Memory {
 	d, err := linuxproc.ReadMemInfo("/proc/meminfo")
 	if err != nil {
 		log.Fatal("couldn't read from /proc/meminfo")
 	}
 
-	mem := memory{d.MemTotal, d.MemAvailable}
+	mem := Memory{d.MemTotal, d.MemAvailable}
 
 	return mem
 }
