@@ -1,4 +1,4 @@
-package main
+package pistats
 
 import (
 	"log"
@@ -6,13 +6,18 @@ import (
 	linuxproc "github.com/c9s/goprocinfo/linux"
 )
 
-func sampleMemory() (t, a uint64) {
+type memory struct {
+	total     uint64
+	available uint64
+}
+
+func sampleMemory() memory {
 	d, err := linuxproc.ReadMemInfo("/proc/meminfo")
 	if err != nil {
 		log.Fatal("couldn't read from /proc/meminfo")
 	}
 
-	t, a = d.MemTotal, d.MemAvailable
+	mem := memory{d.MemTotal, d.MemAvailable}
 
-	return t, a
+	return mem
 }
