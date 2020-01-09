@@ -1,7 +1,7 @@
 package pistats
 
 import (
-	"log"
+	"errors"
 	"time"
 
 	linuxproc "github.com/c9s/goprocinfo/linux"
@@ -10,21 +10,28 @@ import (
 // CPU contains float32 values for each CPU core on a Raspberry PI
 type CPU [4]float32
 
-func sampleCPU() CPU {
-	p := readCPUdata()
-	time.Sleep(time.Second * 1)
-	c := readCPUdata()
-
-	return calcAllCores(c, p)
-}
-
-func readCPUdata() *linuxproc.Stat {
-	d, err := linuxproc.ReadStat("/proc/stat")
+func sampleCPU() (*CPU, error) {
+	p, err := readCPUdata()
 	if err != nil {
-		log.Fatal("couldn't read from /proc/stat")
+		return nil, err
 	}
 
-	return d
+	time.Sleep(time.Second * 1)
+	c, err := readCPUdata()
+	if err != nil {
+		return nil, err
+	}
+
+	return calcAllCores(c, p), nil
+}
+
+func readCPUdata() (*linuxproc.Stat, error) {
+	d, err := linuxproc.ReadStat("/proc/stat")
+	if err != nil {
+		return nil, errors.New("couldn't read from /proc/stat")
+	}
+
+	return d, nil
 }
 
 func calcCore(c, p linuxproc.CPUStat) float32 {
@@ -44,11 +51,11 @@ func calcCore(c, p linuxproc.CPUStat) float32 {
 	return (float32(difTotal) - float32(difIdle)) / float32(difTotal)
 }
 
-func calcAllCores(curr, prev *linuxproc.Stat) CPU {
+func calcAllCores(curr, prev *linuxproc.Stat) *CPU {
 	stats := CPU{}
 	for i := range stats {
 		stats[i] = calcCore(curr.CPUStats[i], prev.CPUStats[i]) * 100
 	}
 
-	return stats
+	return &stats
 }

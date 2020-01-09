@@ -15,7 +15,7 @@ package main
 import pistats "github.com/levsthings/pi-stats"
 
 func main() {
-    data := pistats.GetData()
+    data, _ := pistats.GetData()
 }
 ```
 

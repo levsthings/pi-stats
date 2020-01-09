@@ -1,29 +1,36 @@
 package pistats
 
 import (
-	"log"
+	"errors"
 	"os/exec"
 	"regexp"
 )
 
-func sampleTemp() string {
-	t := parseTemp()
+type Temperature string
 
-	return t
+func sampleTemp() (Temperature, error) {
+	t, err := parseTemp()
+	if err != nil {
+		return "", err
+	}
+	return Temperature(t), nil
 }
 
-func parseTemp() string {
-	d := readTempData()
+func parseTemp() (string, error) {
+	d, err := readTempData()
+	if err != nil {
+		return "", err
+	}
 	r := regexp.MustCompile("[^0-9.]+")
 
-	return r.ReplaceAllString(d, "")
+	return r.ReplaceAllString(d, ""), nil
 }
 
-func readTempData() string {
+func readTempData() (string, error) {
 	out, err := exec.Command("vcgencmd", "measure_temp").Output()
 	if err != nil {
-		log.Fatal("couldn't read from vcgencmd")
+		return "", errors.New("couldn't read from vcgencmd")
 	}
 
-	return string(out)
+	return string(out), nil
 }

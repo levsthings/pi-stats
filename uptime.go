@@ -1,16 +1,18 @@
 package pistats
 
 import (
-	"log"
+	"errors"
 
 	linuxproc "github.com/c9s/goprocinfo/linux"
 )
 
-func getUptime() string {
+type Uptime string
+
+func getUptime() (Uptime, error) {
 	d, err := linuxproc.ReadUptime("/proc/uptime")
 	if err != nil {
-		log.Fatal("couldn't read from /proc/uptime")
+		return "", errors.New("couldn't read from /proc/uptime")
 	}
-
-	return d.GetTotalDuration().String()
+	s := d.GetTotalDuration().String()
+	return Uptime(s), nil
 }
