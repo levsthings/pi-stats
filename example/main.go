@@ -1,6 +1,7 @@
 package main
 
 import (
+	"flag"
 	"fmt"
 	"io/ioutil"
 	"log"
@@ -22,20 +23,19 @@ const (
 )
 
 func main() {
-	pistats.GetData()
-	// mode := flag.String("mode", consoleMode, "Expected input: '--mode console' or '--mode log'")
-	// flag.Parse()
+	mode := flag.String("mode", consoleMode, "Expected input: '--mode console' or '--mode log'")
+	flag.Parse()
 
-	// if *mode == logMode {
-	// 	for {
-	// 		write(format())
-	// 		rotate()
+	if *mode == logMode {
+		for {
+			write(format())
+			rotate()
 
-	// 		time.Sleep(time.Minute * 5)
-	// 	}
-	// }
+			time.Sleep(time.Minute * 5)
+		}
+	}
 
-	// fmt.Print(format())
+	fmt.Print(format())
 }
 
 func format() string {
