@@ -4,7 +4,6 @@ import (
 	"flag"
 	"fmt"
 	"io/ioutil"
-	"log"
 	"os"
 	"sort"
 	"time"
@@ -15,7 +14,6 @@ import (
 const (
 	dir     = ".pi-stats"
 	logPath = dir + "/"
-	perms   = 0770
 	maxLogs = 7
 
 	consoleMode = "console"
@@ -28,23 +26,31 @@ func main() {
 
 	if *mode == logMode {
 		for {
-			write(format())
+			d, err := pistats.GetData()
+			if err != nil {
+				logError(errorOutput{
+					err,
+					"couldn't get temp data from pi-stats",
+				})
+			}
+			write(format(d))
 			rotate()
 
 			time.Sleep(time.Minute * 5)
 		}
 	}
 
-	fmt.Print(format())
+	d, err := pistats.GetData()
+	if err != nil {
+		logError(errorOutput{
+			err,
+			"couldn't get temp data from pi-stats",
+		})
+	}
+	fmt.Print(format(d))
 }
 
-func format() string {
-	d, err := pistats.GetData()
-
-	if err != nil {
-		log.Fatal(err)
-	}
-
+func format(d *pistats.Data) string {
 	var (
 		uptimeFormat = `uptime: %s`
 		cpuFormat    = `CPU 1: %.2f%%, CPU2: %.2f%%, CPU3: %.2f%%, CPU4: %.2f%%`
@@ -75,27 +81,45 @@ func write(d string) {
 	v := []byte(d)
 
 	if _, err := os.Stat(dir); os.IsNotExist(err) {
-		os.Mkdir(dir, perms)
+		err := os.Mkdir(dir, 0755)
+		if err != nil {
+			logError(errorOutput{
+				Error:   err,
+				Message: "couldn't create log folder",
+			})
+		}
 	}
 
-	f, err := os.OpenFile(logPath+t, os.O_APPEND|os.O_CREATE|os.O_WRONLY, perms)
+	f, err := os.OpenFile(logPath+t, os.O_APPEND|os.O_CREATE|os.O_WRONLY, 0644)
 	if err != nil {
-		log.Fatal(err)
+		logError(errorOutput{
+			Error:   err,
+			Message: "couldn't open stats log folder",
+		})
 	}
 
 	if _, err := f.Write(v); err != nil {
-		log.Fatal(err)
+		logError(errorOutput{
+			err,
+			"couldn't write to stats log file",
+		})
 	}
 
 	if err := f.Close(); err != nil {
-		log.Fatal(err)
+		logError(errorOutput{
+			err,
+			"couldn't close stats log file",
+		})
 	}
 }
 
 func rotate() {
 	logs, err := ioutil.ReadDir(dir)
 	if err != nil {
-		log.Fatal("couldn't rotate logs", err)
+		logError(errorOutput{
+			err,
+			"couldn't rotate logs",
+		})
 	}
 
 	if len(logs) > maxLogs {
@@ -107,7 +131,10 @@ func rotate() {
 
 		err := os.Remove(logPath + logs[0].Name())
 		if err != nil {
-			log.Println("error deleting oldest log", err)
+			logError(errorOutput{
+				err,
+				"couldn't delete oldest log file",
+			})
 		}
 	}
 
